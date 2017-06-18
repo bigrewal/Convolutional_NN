@@ -44,25 +44,25 @@ bias={
 def my_model(x):
     x = tf.reshape(x, shape=[-1, 28, 28, 1])
 
-    h_conv1 = tf.nn.relu(conv2d(x, weight['w1']) + bias['conv_b1'])
-    h_pool1 = max_pool(h_conv1)
+    conv1_out = tf.nn.relu(conv2d(x, weight['w1']) + bias['conv_b1'])
+    pool1_out = max_pool(conv1_out)
 
-    h_conv2 = tf.nn.relu(conv2d(h_pool1, weight['w2']) + bias['conv_b2'])
-    h_pool2 = max_pool(h_conv2)
+    conv2_out = tf.nn.relu(conv2d(pool1_out, weight['w2']) + bias['conv_b2'])
+    pool2_out = max_pool(conv2_out)
 
-    h_pool2_flat = tf.reshape(h_pool2, [-1, 7 * 7 * 64])
-    h_fc1 = tf.nn.relu(tf.matmul(h_pool2_flat, weight['w3']) + bias['b3'])
-
-
-    h_fc1_drop = tf.nn.dropout(h_fc1, keep_prob)
+    pool2_flat = tf.reshape(pool2_out, [-1, 7 * 7 * 64])
+    fc1 = tf.nn.relu(tf.matmul(pool2_flat, weight['w3']) + bias['b3'])
 
 
-    y = tf.matmul(h_fc1_drop, weight['w4']) + bias['b4']
+    fc1_drop = tf.nn.dropout(fc1, keep_prob)
+
+
+    y = tf.matmul(fc1_drop, weight['w4']) + bias['b4']
 
     return y
 
 
-#saver = tf.train.Saver()
+saver = tf.train.Saver()
 pred = my_model(x)
 #pred = my_model(x, weight, bias)
 
@@ -97,10 +97,10 @@ with tf.Session() as sess:
             print("At Step: " + str(step) + ", Minibatch Loss= " + \
                   "{:.6f}".format(loss) + ", Training Accuracy= " + \
                   "{:.5f}".format(acc))
-        #saver.save(sess, "./mnist_model.ckpt")
+        saver.save(sess, "./savedModels/mnist_model.ckpt")
         #step += 1
 
-    print("Optimization Finished!")
+    print("Optimisation Finished!")
 
     # Calculate accuracy for 256 mnist Validation set
     print("Testing Accuracy on the Validation set:", \

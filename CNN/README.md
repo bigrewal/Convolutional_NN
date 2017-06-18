@@ -11,5 +11,8 @@ Uses CNN on MNIST data for classification of Handwritten digits.
 ###### The above architecture is taken from https://www.tensorflow.org/get_started/mnist/pros 
 
 
-#### It receives 97.6% accuracy on the Validation Set
+#### It receives 97.6% accuracy on the Validation Set.
 
+
+### 2. use_saved_Model.py 
+Uses the trained CNN model to classify digits. The Model is saved in **savedModels/**  directory.
