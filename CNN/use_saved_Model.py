@@ -55,8 +55,8 @@ def my_model(x):
 
     return y
 
-
 saver = tf.train.Saver()
+
 def use_neural_network(digit):
     prediction = my_model(x)
 
@@ -64,8 +64,8 @@ def use_neural_network(digit):
         sess.run(tf.global_variables_initializer())
         saver.restore(sess, "./savedModels/mnist_model.ckpt")
 
-        result = (sess.run(tf.argmax(prediction.eval(feed_dict={x: digit}), 1)))
+        result = (sess.run(tf.argmax(prediction.eval(feed_dict={x: [digit],keep_prob: 1.0}), 1)))
         print("Predicted Label: ",result)
+        print("Correct Label: ", sess.run(tf.argmax(mnist.test.labels[1], 0)))
 
-use_neural_network(mnist.test.images[0])
-print("Correct Label: ",mnist.test.label[0])
+use_neural_network(mnist.test.images[1])
