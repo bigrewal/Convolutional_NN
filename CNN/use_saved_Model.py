@@ -3,6 +3,8 @@ from tensorflow.examples.tutorials.mnist import input_data
 
 mnist = input_data.read_data_sets('MNIST_data', one_hot=True)
 
+import CNN_mnist
+
 # Network Parameters
 n_input = 784 # MNIST data input (img shape: 28*28)
 n_classes = 10 # MNIST total classes (0-9 digits)
@@ -35,30 +37,11 @@ bias={
     'b4': tf.Variable(tf.zeros([n_classes]), name="b4")
 }
 
-def my_model(x):
-    x = tf.reshape(x, shape=[-1, 28, 28, 1])
-
-    conv1_out = tf.nn.relu(conv2d(x, weight['w1']) + bias['conv_b1'])
-    pool1_out = max_pool(conv1_out)
-
-    conv2_out = tf.nn.relu(conv2d(pool1_out, weight['w2']) + bias['conv_b2'])
-    pool2_out = max_pool(conv2_out)
-
-    pool2_flat = tf.reshape(pool2_out, [-1, 7 * 7 * 64])
-    fc1 = tf.nn.relu(tf.matmul(pool2_flat, weight['w3']) + bias['b3'])
-
-
-    fc1_drop = tf.nn.dropout(fc1, keep_prob)
-
-
-    y = tf.matmul(fc1_drop, weight['w4']) + bias['b4']
-
-    return y
-
+#CNN_mnist.my_model()
 saver = tf.train.Saver()
 
 def use_neural_network(digit):
-    prediction = my_model(x)
+    prediction = CNN_mnist.my_model(x)
 
     with tf.Session() as sess:
         sess.run(tf.global_variables_initializer())
