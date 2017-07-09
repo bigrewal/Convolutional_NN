@@ -1,6 +1,6 @@
 import numpy as np
 
-from optim import adam,sgd
+from optim import adam
 from data_utils import sample_minibatch
 
 class CaptioningSolver(object):
@@ -11,7 +11,7 @@ class CaptioningSolver(object):
         self.data = data
 
         # Unpack keyword arguments
-        self.update_rule = kwargs.pop('update_rule', 'sgd')
+        self.update_rule = kwargs.pop('update_rule', 'adam')
         self.optim_config = kwargs.pop('optim_config', {})
         self.lr_decay = kwargs.pop('lr_decay', 1.0)
         self.batch_size = kwargs.pop('batch_size', 100)
@@ -24,12 +24,6 @@ class CaptioningSolver(object):
         if len(kwargs) > 0:
             extra = ', '.join('"%s"' % k for k in list(kwargs.keys()))
             raise ValueError('Unrecognized arguments %s' % extra)
-
-        # Make sure the update rule exists, then replace the string
-        # name with the actual function
-        # if not hasattr(optim, self.update_rule):
-        #     raise ValueError('Invalid update_rule "%s"' % self.update_rule)
-        # self.update_rule = getattr(optim, self.update_rule)
 
         self._reset()
 

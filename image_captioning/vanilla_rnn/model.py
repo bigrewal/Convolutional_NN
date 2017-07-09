@@ -6,7 +6,7 @@ class CaptioningRNN(object):
     def __init__(self, word_to_idx, input_dim=512, wordvec_dim=128,
                  hidden_dim=128, cell_type='rnn', dtype=np.float32):
 
-        if cell_type not in {'rnn', 'lstm'}:
+        if cell_type not in {'rnn'}:
             raise ValueError('Invalid cell_type "%s"' % cell_type)
 
         self.cell_type = cell_type
@@ -31,7 +31,7 @@ class CaptioningRNN(object):
         self.params['b_proj'] = np.zeros(hidden_dim)
 
         # Initialize parameters for the RNN
-        dim_mul = {'lstm': 4, 'rnn': 1}[cell_type]
+        dim_mul = {'rnn': 1}[cell_type]
         self.params['Wx'] = np.random.randn(wordvec_dim, dim_mul * hidden_dim)
         self.params['Wx'] /= np.sqrt(wordvec_dim)
         self.params['Wh'] = np.random.randn(hidden_dim, dim_mul * hidden_dim)
@@ -79,8 +79,6 @@ class CaptioningRNN(object):
         # Step 3
         if self.cell_type == 'rnn':
             h, cache_rnn = rnn_forward(x, h0, Wx, Wh, b)
-        elif self.cell_type == 'lstm':
-            h, cache_rnn = lstm_forward(x, h0, Wx, Wh, b)
         else:
             raise ValueError('%s not implemented' % (self.cell_type))
 
@@ -101,8 +99,6 @@ class CaptioningRNN(object):
         # Backward into step 3
         if self.cell_type == 'rnn':
             dx, dh0, dWx, dWh, db = rnn_backward(dh, cache_rnn)
-        elif self.cell_type == 'lstm':
-            dx, dh0, dWx, dWh, db = lstm_backward(dh, cache_rnn)
         else:
             raise ValueError('%s not implemented' % (self.cell_type))
 
@@ -153,26 +149,20 @@ class CaptioningRNN(object):
                 # Run a step of rnn
                 h, _ = step_forward(np.squeeze(
                     word_embed), Wx,prev_h, Wh, b)
-            elif self.cell_type == 'lstm':
-                # Run a step of lstm
-                h, c, _ = lstm_step_forward(np.squeeze(
-                    word_embed), prev_h, prev_c, Wx, Wh, b)
             else:
                 raise ValueError('%s not implemented' % (self.cell_type))
 
             # Compute the score distrib over the dictionary
             scores, _ = temporal_affine_forward(
                 h[:, np.newaxis, :], W_vocab, b_vocab)
-            # Squeeze unecessari dimension and get the best word idx
+
+            # Squeeze unecessary dimension and get the best word idx
             idx_best = np.squeeze(np.argmax(scores, axis=2))
             # Put it in the captions
             captions[:, t] = idx_best
 
-            # Update the hidden state, the cell state (if lstm) and the current
-            # word
+
             prev_h = h
-            if self.cell_type == 'lstm':
-                prev_c = c
             capt = captions[:, t]
 
         return captions

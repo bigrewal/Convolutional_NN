@@ -51,9 +51,6 @@ def load_data(pca=True,max_train=None):
 
     return data
 
-    return data
-
-
 def sample_minibatch(data, batch_size, split='train'):
     split_size = data['%s_captions' % split].shape[0]
     mask = np.random.choice(split_size, batch_size)
@@ -82,4 +79,5 @@ def decode_captions(captions,index_to_word):
         decoded.append(' '.join(words))
     if singleton:
         decoded = decoded[0]
+
     return decoded
