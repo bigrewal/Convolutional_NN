@@ -3,7 +3,7 @@ import numpy as np
 import os
 import json
 
-URL = '../../../assignment3/cs231n/datasets/coco_captioning'
+URL = '/coco_captioning'    #change it your own URL
 
 def load_data(pca=True,max_train=None):
     data = {}
