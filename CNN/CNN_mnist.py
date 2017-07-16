@@ -7,7 +7,7 @@ print("MNIST Data loaded!")
 #Hyperparameters
 learning_rate = 1e-4
 batch_size = 50
-total_Itterations = 100
+total_Itterations = 20000
 
 # Network Parameters
 n_input = 784 # MNIST data input (img shape: 28*28)
