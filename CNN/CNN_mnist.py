@@ -7,7 +7,7 @@ print("MNIST Data loaded!")
 #Hyperparameters
 learning_rate = 1e-4
 batch_size = 50
-total_Itterations = 20000
+total_Itterations = 100
 
 # Network Parameters
 n_input = 784 # MNIST data input (img shape: 28*28)
@@ -61,10 +61,8 @@ def my_model(x):
 
     return y
 
-
-saver = tf.train.Saver()
+#saver = tf.train.Saver()   #Uncomment this if you want to save the trained model
 pred = my_model(x)
-#pred = my_model(x, weight, bias)
 
 # Define loss and optimizer
 cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=pred, labels=y))
@@ -82,11 +80,11 @@ display_step = 10
 # Launch the graph
 with tf.Session() as sess:
     sess.run(init)
-    #step = 1
+
     # Keep training until reach max iterations
     for step in range(total_Itterations):
         batch_x, batch_y = mnist.train.next_batch(batch_size)
-        # Run optimization op (backprop)
+        # Run the optimiser
         sess.run(optimizer, feed_dict={x: batch_x, y: batch_y,keep_prob:0.5})
         if step % 100 == 0:
             # Calculate batch loss and accuracy
@@ -97,8 +95,8 @@ with tf.Session() as sess:
             print("At Step: " + str(step) + ", Minibatch Loss= " + \
                   "{:.6f}".format(loss) + ", Training Accuracy= " + \
                   "{:.5f}".format(acc))
-        saver.save(sess, "./savedModels/mnist_model.ckpt")
-        #step += 1
+
+        #saver.save(sess, "./savedModels/mnist_model.ckpt")  #Uncomment this if you want to save the trained model
 
     print("Optimisation Finished!")
 
