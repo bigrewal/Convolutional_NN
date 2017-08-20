@@ -7,3 +7,8 @@ This directory contains the following files:
 
     CNN_mnist.py
     use_saved_Model.py
+
+### 2. Image Captioning using Vanilla RNN
+
+    
+    
